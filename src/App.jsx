@@ -1,15 +1,22 @@
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { getTokenFromUrl } from './api/spotify';
 
 import SpotifyWebApi from "spotify-web-api-js";
 import Login from './components/pages/Login';
+import Home from './components/pages/Home';
+import SpotifyState from './context/spotify/SpotifyState';
+import SpotifyContext from './context/spotify/SpotifyContext';
 
 const spotify = new SpotifyWebApi();
+
+// revisar si tenemos un token
+const token_sotrage = localStorage.getItem( 'token' );
 
 function App () {
 
     const [ token, setToken ] = useState();
+    
 
     useEffect( () => {
 
@@ -19,45 +26,30 @@ function App () {
         window.location.hash = "";
         const _token = hash.access_token;
 
+        localStorage.setItem( 'token', _token );
+
+        // enviar token al state
+
         if ( _token ) {
             setToken( _token );
-            spotify.setAccessToken( _token );
+            // spotify.setAccessToken( _token );
         }
 
         console.log( "token", _token );
 
-        spotify.setAccessToken( _token );
 
-        // spotify.getMe().then( ( user ) => {
-        //     dispatch( {
-        //         type: "SET_USER",
-        //         user,
-        //     } );
-        // } );
-
-        // spotify.getUserPlaylists().then( ( playlists ) => {
-        //     dispatch( {
-        //         type: "SET_PLAYLISTS",
-        //         playlists,
-        //     } );
-        // } );
-
-
-        // spotify.getPlaylist( "37i9dQZF1EF34Ucml4HHx1w" ).then( ( playlist ) => {
-        //     dispatch( {
-        //         type: "SET_DISCOVER_WEEKLY",
-        //         discover_weekly: playlist,
-        //     } );
-        // } );
 
     }, [] );
 
 
     return (
-        <div>
-            {/* <h1>my music app</h1> */ }
-            <div className="app">{ token ? <h1>Logged in</h1> : <Login /> }</div>
-        </div>
+        <SpotifyState>
+
+            <div>
+                {/* <h1>my music app</h1> */ }
+                <div className="app">{ token ? <Home /> : <Login /> }</div>
+            </div>
+        </SpotifyState>
     );
 }
 

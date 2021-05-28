@@ -1,8 +1,11 @@
+import { Credenciales } from './Credenciales';
+
+
+const spotify = Credenciales();
 
 export const authEndpoint = "https://accounts.spotify.com/authorize";
 const redirectUri = "http://localhost:3000/";
-const clientId = "78bb7fcb428044aa9339ff2111a44b7a";
-const secretID = "7a7e51c0cf86416085c59d8ef9a6526a";
+const clientId = spotify.ClientId;
 
 const scopes = [
     "user-read-currently-playing",

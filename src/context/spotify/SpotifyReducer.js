@@ -1,41 +1,47 @@
 
-import { SET_USER, SET_TOKEN, SET_PLAYLISTS, SET_DISCOVER_WEEKLY } from './../../types/index';
+import { SET_USER, SET_PLAYLISTS, SET_PLAYLIST_SELECT, SET_TRACKS, SET_GENRES, SET_GENRE } from './../../types/index';
 
-export const initialState = {
-    user: null,
-    token: null,
-    playlists: [],
-    playing: false,
-    item: null,
-};
 
-const reducer = ( state, action ) => {
-    console.log( action );
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default ( state, action ) => {
+    console.log( { action } );
 
     switch ( action.type ) {
         case SET_USER:
             return {
                 ...state,
-                user: action.user,
+                user: action.payload,
             };
-        case SET_TOKEN:
+
+        case SET_GENRES:
             return {
                 ...state,
-                token: action.token,
+                genresList: action.payload,
+            };
+        case SET_GENRE:
+            return {
+                ...state,
+                genreSelect: action.payload,
             };
         case SET_PLAYLISTS:
+           
             return {
                 ...state,
-                playlists: action.playlists,
+                playlist: action.payload,
             };
-        case SET_DISCOVER_WEEKLY:
+        case SET_PLAYLIST_SELECT:
             return {
                 ...state,
-                discover_weekly: action.discover_weekly,
+                playlistSelect: action.payload,
+            };
+
+        case SET_TRACKS:
+            return {
+                ...state,
+                tracks: action.tracks,
             };
         default:
             return state;
     }
 };
-
-export default reducer;
