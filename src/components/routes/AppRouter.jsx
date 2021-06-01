@@ -14,41 +14,56 @@ import { getTokenFromUrl } from '../../api/spotify';
 
 const AppRouter = () => {
 
-    const tokenStorage = localStorage.getItem( 'token' );
 
-    const { user, isAuthenticated, loginUser, logout } = useContext( SpotifyContext );
+
+    const [ autenticado, setAutenticado ] = useState( false );
+
+    const { user, isAuthenticated, loginUser, logout, loading } = useContext( SpotifyContext );
     console.log( { user } );
+    // console.log( { loading } );
 
     console.log( { isAuthenticated } );
 
-    console.log( { tokenStorage } );
-
-    let autenticado = true;
+    const tokenStorage = localStorage.getItem( 'token' );
 
 
-    if ( tokenStorage === 'undefined' || !tokenStorage   ) {
+    useEffect( () => {
+        console.log( 'rutas' );
 
-        autenticado = false;
-        localStorage.removeItem('token')
-       
-        // console.log( "token", token );
-    } else {
 
-        const hash = getTokenFromUrl();
-        window.location.hash = "";
-        const _token = hash.access_token;
-        localStorage.setItem( 'token', _token );
+        console.log( { tokenStorage } );
 
-        if ( _token ) {
-            // setToken( _token );
+        if ( tokenStorage === 'undefined' || !tokenStorage ) {
 
-            console.log( _token );
-            return
+            setAutenticado( false );
+            localStorage.removeItem( 'token' );
 
+            const hash = getTokenFromUrl();
+            console.log( { hash } );
+            if ( hash ) {
+                window.location.hash = "";
+                const _token = hash.access_token;
+                localStorage.setItem( 'token', _token );
+
+                if ( _token ) {
+                    // setToken( _token );
+
+                    console.log( _token );
+                    setAutenticado( true );
+                    return;
+
+                }
+            }
+
+            // console.log( "token", token );
+        } else {
+            console.log( 'existe el token' );
+            setAutenticado( true );
+
+            return;
         }
 
-        autenticado = true;
-    }
+    }, [] );
 
     return (
         <Router>
@@ -59,13 +74,13 @@ const AppRouter = () => {
 
                     <PublicRoute
                         exact
-                        path="/login"
+                        path="/"
                         component={ Login }
                         isAuthenticated={ autenticado }
                     />
 
                     <PrivateRoute
-                        path="/"
+                        path="/home"
                         component={ HomeRoutes }
                         isAuthenticated={ autenticado }
                     />

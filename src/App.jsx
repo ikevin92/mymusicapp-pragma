@@ -15,14 +15,31 @@ const spotify = new SpotifyWebApi();
 const token_sotrage = localStorage.getItem( 'token' );
 
 function App () {
-    
+
+
+ 
+
+
+    // useEffect( () => {
+
+    //     console.log( 'componente principal' );
+    //     const hash = getTokenFromUrl();
+    //     console.log( { hash } );
+    //     window.location.hash = "";
+    //     const _token = hash.access_token;
+
+    //     if ( _token ) {
+    //         setToken( _token );
+    //     }
+
+    //     console.log( "token", token );
+
+    // }, [] );
 
 
     return (
-        <SpotifyState>
 
-
-
+        <>
             {/* { token
                     ? <AppRouter />
                     : <Login />
@@ -31,9 +48,8 @@ function App () {
 
             {/* <AppRouter token={ token } /> */ }
             <AppRouter />
+        </>
 
-
-        </SpotifyState>
     );
 }
 

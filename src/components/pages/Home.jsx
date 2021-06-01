@@ -122,13 +122,15 @@ const Home = () => {
 
     useEffect( () => {
         console.log( 'componente cargado' );
+        console.log( genresList );
 
-        if ( !genresList ) {
+
+        if ( genresList.length === 0 ) {
             loadGenresAPI();
         }
 
 
-    }, [genresList, loadGenresAPI] );
+    }, [ genresList, loadGenresAPI ] );
 
     return (
         <>

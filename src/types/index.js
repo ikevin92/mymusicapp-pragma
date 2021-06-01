@@ -8,6 +8,7 @@ export const SET_GENRES = 'GET_GENRES';
 export const SET_GENRE = 'GET_GENRE';
 export const SET_DISCOVER_WEEKLY = 'SET_DISCOVER_WEEKLY';
 export const LOGOUT = 'LOGOUT';
+export const LOADING = 'LOADING';
 
 
 

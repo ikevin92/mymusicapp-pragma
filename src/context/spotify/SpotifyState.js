@@ -2,7 +2,7 @@ import { useReducer } from 'react';
 import axios from 'axios';
 import SpotifyContext from './SpotifyContext';
 import SpotifyReducer from './SpotifyReducer';
-import { SET_GENRE, SET_GENRES, GET_TOKEN, SET_PLAYLIST_SELECT, SET_PLAYLISTS, SET_TRACK_SELECT, SET_TRACKS, LOGOUT } from '../../types';
+import { SET_GENRE, SET_GENRES, GET_TOKEN, SET_PLAYLIST_SELECT, SET_PLAYLISTS, SET_TRACK_SELECT, SET_TRACKS, LOGOUT, LOADING } from '../../types';
 import { SET_USER } from './../../types/index';
 
 const SpotifyState = props => {
@@ -16,7 +16,8 @@ const SpotifyState = props => {
         tracksList: [],
         trackSelect: null,
         item: null,
-        isAuthenticated: false
+        isAuthenticated: false,
+        loading: false
     };
     // hook para reducers
     const [ state, dispatch ] = useReducer( SpotifyReducer, initialState );
@@ -165,6 +166,13 @@ const SpotifyState = props => {
         } );
     };
 
+    const setLoading = (value) => {
+        dispatch( {
+            type: LOADING,
+            payload: value
+        } );
+    }
+
 
     return (
         <SpotifyContext.Provider
@@ -179,6 +187,7 @@ const SpotifyState = props => {
                 trackSelect: state.trackSelect,
                 item: state.item,
                 isAuthenticated: state.isAuthenticated,
+                loading: state.loading,
                 // funciones
                 loadGenresAPI,
                 loginUser,
@@ -186,7 +195,8 @@ const SpotifyState = props => {
                 loadPlaylistAPI,
                 loadPlaylistSelect,
                 loadTracksAPI,
-                logout
+                logout,
+                setLoading
             } }
         >
             { props.children }
@@ -194,5 +204,9 @@ const SpotifyState = props => {
         </SpotifyContext.Provider>
     );
 };
+
+
+
+
 //https://medium.com/cleverprogrammer/spotify-clone-using-reactjs-the-ultimate-guide-2a47977a1e4f
 export default SpotifyState;

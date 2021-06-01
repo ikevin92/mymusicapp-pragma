@@ -1,20 +1,28 @@
+import { useContext, useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import { loginUrl } from '../../api/spotify';
+import { getTokenFromUrl, loginUrl } from '../../api/spotify';
 import "./Login.scss";
+import SpotifyContext from './../../context/spotify/SpotifyContext';
 
 
 const Login = () => {
-    const history = useHistory();
 
-    console.log( 'login bro' );
+    const { loading, setLoading } = useContext( SpotifyContext );
+
+
 
     const handleOnClick = () => {
+
         console.log( loginUrl );
-      
-        
-        window.location.href = loginUrl
+
+        // setLoading( true );
+
+        window.location.href = loginUrl;
+
 
     };
+
+
 
 
     return (

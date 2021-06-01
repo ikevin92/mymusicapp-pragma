@@ -16,7 +16,7 @@ const HomeRoutes = () => {
 
                 <Switch>
 
-                    <Route exact path="/home" component={ Home } />
+                    <Route exact  path="/home" component={ Home } />
                     <Route exact path="/favorites" component={ Favorites } />
                     <Redirect to="/home" />
 

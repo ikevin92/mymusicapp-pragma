@@ -1,4 +1,9 @@
 import logo from '../../assets/img/file-music.svg'
+import {
+    NavLink,
+    Link,
+    useHistory
+} from "react-router-dom";
 
 const Header = () => {
 
@@ -20,11 +25,12 @@ const Header = () => {
           
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mb-2 mb-lg-0">
-                        <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="#">Home</a>
+                        <li className="nav-item">                         
+                            <Link to="/home" className="btn btn-dark mr-2" >Home</Link>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="#">Favoritos</a>
+                            <Link to="/favorites" className="btn btn-dark mr-2">Favorites</Link>
+                            
                         </li>
 
 

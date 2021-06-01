@@ -4,13 +4,17 @@ import './styles/styles.scss';
 import App from './App.jsx';
 import reportWebVitals from './reportWebVitals';
 
-import 'animate.css'
+import 'animate.css';
+
+import SpotifyState from './context/spotify/SpotifyState';
 
 ReactDOM.render(
-  
-    <App />,
- 
-  document.getElementById('root')
+    <SpotifyState>
+        <App />
+    </SpotifyState >
+    ,
+
+    document.getElementById( 'root' )
 );
 
 // If you want to start measuring performance in your app, pass a function
