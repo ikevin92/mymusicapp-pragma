@@ -1,5 +1,5 @@
 
-import { SET_USER, SET_PLAYLISTS, SET_PLAYLIST_SELECT, SET_TRACKS, SET_GENRES, SET_GENRE } from './../../types/index';
+import { SET_USER, SET_PLAYLISTS, SET_PLAYLIST_SELECT, SET_TRACKS, SET_GENRES, SET_GENRE, SET_TRACK_SELECT, LOGOUT } from './../../types/index';
 
 
 
@@ -11,6 +11,7 @@ export default ( state, action ) => {
         case SET_USER:
             return {
                 ...state,
+                isAuthenticated: true,
                 user: action.payload,
             };
 
@@ -25,7 +26,7 @@ export default ( state, action ) => {
                 genreSelect: action.payload,
             };
         case SET_PLAYLISTS:
-           
+
             return {
                 ...state,
                 playlist: action.payload,
@@ -39,7 +40,17 @@ export default ( state, action ) => {
         case SET_TRACKS:
             return {
                 ...state,
-                tracks: action.tracks,
+                tracksList: action.payload,
+            };
+        case SET_TRACK_SELECT:
+            return {
+                ...state,
+                trackSelect: action.payload,
+            };
+        case LOGOUT:
+            console.log('logout reducer')
+            return {
+
             };
         default:
             return state;

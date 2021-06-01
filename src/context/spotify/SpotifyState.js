@@ -2,7 +2,8 @@ import { useReducer } from 'react';
 import axios from 'axios';
 import SpotifyContext from './SpotifyContext';
 import SpotifyReducer from './SpotifyReducer';
-import { SET_GENRE, SET_GENRES, GET_TOKEN, SET_PLAYLIST_SELECT, SET_PLAYLISTS } from '../../types';
+import { SET_GENRE, SET_GENRES, GET_TOKEN, SET_PLAYLIST_SELECT, SET_PLAYLISTS, SET_TRACK_SELECT, SET_TRACKS, LOGOUT } from '../../types';
+import { SET_USER } from './../../types/index';
 
 const SpotifyState = props => {
     const initialState = {
@@ -12,9 +13,10 @@ const SpotifyState = props => {
         genreSelect: null,
         playlist: [],
         playlistSelect: null,
-        tracks: [],
+        tracksList: [],
         trackSelect: null,
         item: null,
+        isAuthenticated: false
     };
     // hook para reducers
     const [ state, dispatch ] = useReducer( SpotifyReducer, initialState );
@@ -56,7 +58,7 @@ const SpotifyState = props => {
 
     // playlist
     const loadPlaylistAPI = async ( value ) => {
-      
+
         const token = localStorage.getItem( 'token' );
 
         try {
@@ -88,7 +90,9 @@ const SpotifyState = props => {
     };
 
     //tracks
-    const loadTracksAPI = async (playlist) => {
+    const loadTracksAPI = async ( playlist ) => {
+
+        const token = localStorage.getItem( 'token' );
 
         try {
             const response = await axios( `https://api.spotify.com/v1/playlists/${ playlist }/tracks?limit=10`, {
@@ -100,10 +104,17 @@ const SpotifyState = props => {
 
             console.log( response.data.items );
 
-            setTracks( {
-                selectedTrack: tracks.selectedTrack,
-                listOfTracksFromAPI: response.data.items
+            const { items } = response.data;
+
+            dispatch( {
+                type: SET_TRACKS,
+                payload: items
             } );
+
+            // setTracks( {
+            //     selectedTrack: tracks.selectedTrack,
+            //     listOfTracksFromAPI: response.data.items
+            // } );
 
         } catch ( error ) {
             console.log( error );
@@ -111,9 +122,46 @@ const SpotifyState = props => {
     };
 
 
-    const loadToken = () => {
+    const loginUser = async () => {
+
+        console.log( "login user" );
+
+        const token = localStorage.getItem( 'token' );
+
+        try {
+            const response = await axios( `https://api.spotify.com/v1/me`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            } );
+
+            console.log( "login", response.data );
+
+            const { data } = response;
+
+            dispatch( {
+                type: SET_USER,
+                payload: data
+            } );
+
+            // setTracks( {
+            //     selectedTrack: tracks.selectedTrack,
+            //     listOfTracksFromAPI: response.data.items
+            // } );
+
+        } catch ( error ) {
+
+            console.log( error );
+
+            logout();
+
+        }
+    };
+
+    const logout = () => {
         dispatch( {
-            type: GET_TOKEN
+            type: LOGOUT
         } );
     };
 
@@ -127,16 +175,18 @@ const SpotifyState = props => {
                 genreSelect: state.genreSelect,
                 playlist: state.playlist,
                 playlistSelect: state.playlistSelect,
-                tracks: state.tracks,
+                tracksList: state.tracksList,
                 trackSelect: state.trackSelect,
                 item: state.item,
+                isAuthenticated: state.isAuthenticated,
                 // funciones
                 loadGenresAPI,
-                loadToken,
+                loginUser,
                 loadGenreSelect,
                 loadPlaylistAPI,
                 loadPlaylistSelect,
-                loadTracksAPI
+                loadTracksAPI,
+                logout
             } }
         >
             { props.children }

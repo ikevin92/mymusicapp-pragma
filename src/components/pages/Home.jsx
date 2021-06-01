@@ -1,15 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-
 
 
 import Header from './../organisms/Header';
 import Detail from './../organisms/Detail';
 import ListBox from './../molecules/ListBox';
 import Dropdown from './../molecules/Dropdown';
+
 import { Credenciales } from '../../api/Credenciales';
 import SpotifyContext from '../../context/spotify/SpotifyContext';
-import { useContext } from 'react';
+
+import "./Home.scss";
+import { getTokenFromUrl } from '../../api/spotify';
+
 
 
 const Home = () => {
@@ -18,15 +21,16 @@ const Home = () => {
     const spotify = Credenciales();
     // console.log( spotify );
 
-
     const { genresList,
         genreSelect,
         playlist,
-        playlistsSelect,
+        playlistSelect,
         loadGenresAPI,
         loadGenreSelect,
         loadPlaylistAPI,
-        loadPlaylistSelect
+        loadPlaylistSelect,
+        loadTracksAPI,
+        tracksList
     } = useContext( SpotifyContext );
 
     // state para el token
@@ -73,40 +77,21 @@ const Home = () => {
     };
 
     const handlePlaylistOnChange = ( value ) => {
-       
+
         loadPlaylistSelect( value );
 
-    };
-
-    const loadTracksAPI = async () => {
-
-        try {
-            const response = await axios( `https://api.spotify.com/v1/playlists/${ playlist.selectedPlaylist }/tracks?limit=10`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            } );
-
-            console.log( response.data.items );
-
-            setTracks( {
-                selectedTrack: tracks.selectedTrack,
-                listOfTracksFromAPI: response.data.items
-            } );
-
-        } catch ( error ) {
-            console.log( error );
-        }
     };
 
 
 
     // funcion para buscar
     const handleSubmit = ( e ) => {
+
         e.preventDefault();
-        console.log( 'submit', playlist.selectedPlaylist );
-        loadTracksAPI();
+
+        console.log( 'submit', playlistSelect );
+
+        loadTracksAPI( playlistSelect );
 
         // carga los tracks
         // listboxClicked( playlist.selectedPlaylist );
@@ -138,23 +123,25 @@ const Home = () => {
     useEffect( () => {
         console.log( 'componente cargado' );
 
+        if ( !genresList ) {
+            loadGenresAPI();
+        }
 
-        loadGenresAPI();
 
-
-
-    }, [] );
+    }, [genresList, loadGenresAPI] );
 
     return (
         <>
-            <Header />
-
-            <div className="container">
 
 
-                <form onSubmit={ handleSubmit }>
+            {/* <Header /> */ }
 
-                    <div className='container' >
+
+            <form onSubmit={ handleSubmit }>
+
+                <div className='container mt-4'>
+
+                    <div className="mb-3">
                         <Dropdown
                             // options={ genres.listOfGenresFromAPI }
                             options={ genresList }
@@ -162,33 +149,38 @@ const Home = () => {
                             selectedValue={ genreSelect }
                             changed={ handleGenreOnChange }
                         />
+                    </div>
+
+                    <div className=" mb-3">
                         <Dropdown
                             options={ playlist }
-                            selectedValue={ playlistsSelect }
+                            selectedValue={ playlistSelect }
                             // selectedValue={ playlist.selectedPlaylist }
                             changed={ handlePlaylistOnChange }
                         />
 
-                        <ListBox
-                            items={ tracks.listOfTracksFromAPI }
-                            clicked={ listboxClicked }
-                        />
-
-                        {
-                            trackDetail &&
-                            <Detail { ...trackDetail } />
-
-                        }
-
-
-
-                        <button type='submit'>
-                            Buscar
-                        </button>
-                        <button onClick={ handleLogout } >Logout</button>
                     </div>
-                </form>
-            </div>
+
+                    <button type='submit' className="btn btn-outline-light">
+                        Buscar
+                    </button>
+                    <button onClick={ handleLogout } >Logout</button>
+                </div>
+            </form>
+
+
+            <ListBox
+                items={ tracksList }
+                clicked={ listboxClicked }
+            />
+
+            {
+                trackDetail &&
+                <Detail { ...trackDetail } />
+
+            }
+
+
         </>
     );
 };

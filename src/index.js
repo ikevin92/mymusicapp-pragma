@@ -4,6 +4,8 @@ import './styles/styles.scss';
 import App from './App.jsx';
 import reportWebVitals from './reportWebVitals';
 
+import 'animate.css'
+
 ReactDOM.render(
   
     <App />,

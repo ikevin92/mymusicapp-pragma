@@ -18,7 +18,7 @@ const Dropdown = ( props ) => {
 
     return (
         <div>
-            <select value={ props.selectedValue } onChange={ handleOnChange }>
+            <select value={ props.selectedValue } onChange={ handleOnChange } className="form-select">
                 { options.map( ( item, id ) =>
                     <option key={ item.id } value={ item.id }>{ item.name }</option>
                 ) }
